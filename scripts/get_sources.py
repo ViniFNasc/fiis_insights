@@ -45,22 +45,6 @@ class GetSources:
         
     
     def get_yahoofinance_data(self, ticker):
-
-        # getting the most recent file for the ticker
-        folder = Path(self.path_yahoofinance)
-        most_recent_file = max(
-            folder.glob("*"),
-            key=lambda x: x.stat().st_mtime
-        )
-        # modifided date of the most recent file
-        file_date = datetime.datetime.fromtimestamp(
-            most_recent_file.stat().st_mtime
-        )
-        max_file_date = file_date.strftime("%Y-%m-%d")
-
-        if max_file_date == str(self.date):
-            print(f"Data for {ticker} is already up to date.")
-            return pd.read_csv(most_recent_file)
         
         df = yf.download(ticker + '.SA', start='1999-01-01', end=self.date,auto_adjust=False)
 
