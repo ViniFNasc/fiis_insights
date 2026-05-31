@@ -1,7 +1,7 @@
 from scripts.get_sources import *
 from scripts.get_top_fiis import *
 from dotenv import dotenv_values
-
+from scripts.get_news import NoticiasFII
 
 def main():
     # Loading enviorment variables
@@ -32,6 +32,14 @@ def main():
     print('Getting yahoo finance data for all fii...')
     for fii in fii_codes:
         df_cotacao = get_sources.get_yahoofinance_data(fii)
+
+    print('Getting news for all fii...')
+    # Getting news for all fii
+    for fii in fii_codes:
+        news = NoticiasFII(fii, max_noticias=5, timeout=15)
+        news.buscar()
+        news.salvar_json()
+        
 
 if __name__ == "__main__":
     main()

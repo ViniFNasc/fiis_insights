@@ -7,11 +7,21 @@ class GetTopFiis:
     def __init__(self):
         self.date = datetime.datetime.now().date()
         self.path_analysis = 'database/analysis/'
-        
+        self.path_fiis_ifix = 'database/ifix/FIIs_IFIX.csv'
+        self.list_fiis_ifix = self.get_fiis_ifix()
+    
+    def get_fiis_ifix(self):
+        df_fiis_ifix = pd.read_csv(self.path_fiis_ifix,encoding='latin-1',sep=';',skiprows=1)
+        df_fiis_ifix = df_fiis_ifix.reset_index()
+        df_fiis_ifix.columns = ['Código', 'Ação', 'Tipo', 'Qtde. Teórica', 'Part. (%)','N/A']
+        df_fiis_ifix = df_fiis_ifix.drop(columns=['N/A'])
+        print(df_fiis_ifix['Código'].tolist())
+        return df_fiis_ifix['Código'].tolist()
 
     def get_anchor_reits(self,df_fundamentus,anchor_reits_parameters):
         
         df_filtro = df_fundamentus
+        df_filtro = df_filtro[df_filtro['papel'].isin(self.list_fiis_ifix)]  # Filtrando apenas os FIIs do IFIX
 
         filtered_dict = {
             k: v for k, v in anchor_reits_parameters.items()
@@ -55,6 +65,7 @@ class GetTopFiis:
     def get_undervalued_reits(self,df_fundamentus,opportunity_reits_parameters):
         
         df_filtro = df_fundamentus
+        df_filtro = df_filtro[df_filtro['papel'].isin(self.list_fiis_ifix)] # Filtrando apenas os FIIs do IFIX
 
         filtered_dict = {
             k: v for k, v in opportunity_reits_parameters.items()
